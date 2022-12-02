@@ -22,6 +22,7 @@ delay = 60
 save_after = 50
 
 ####
+######
 def read_temp_raw():
     # for temp sensor___________________________________________________
     os.system('modprobe w1-gpio')
