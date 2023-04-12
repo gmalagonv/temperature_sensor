@@ -5,6 +5,10 @@ Created on Mon Oct 24 14:23:11 2022
 
 @author: gerard
 """
+# copy to raspberry by ssh: 
+# scp ~/nextcloud/python_stuff/raspberry/temperature_sensor/button_temp_multiproc.py gerard@192.168.0.145:~/python_stuff/button_temp_multiproc.py
+# confirm rasberry's ip address by: ifconfig -a
+
 
 #import threading
 import multiprocessing
@@ -18,8 +22,9 @@ from ctypes import c_bool
 from oled_text import simple_text
 
 ## variables
-delay = 60
+delay = 10 # in seconds
 save_after = 50
+saveFile_flag = False
 
 ####
 ######
@@ -76,7 +81,7 @@ def print_temp(switchsensor, times, temps):
             times.append(time_measure)
             temps.append(temp)
             
-            if count >= save_after and count % save_after == 0:
+            if count >= save_after and count % save_after == 0 and saveFile_flag:
                 write_excel(times, temps, True)  
             count += 1
             
@@ -158,7 +163,8 @@ if __name__ == "__main__":
         
         if switchsensor.value == False and switch_counter.value > 1 and terminated == False:
             t2.terminate()
-            write_excel(times, temps, False)            
+            if saveFile_flag:
+                write_excel(times, temps, False)            
             
             times = manager.list()
             temps = manager.list()
